@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>{% block title %}Library Front{% endblock %}</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#0f172a;
+      --border:#22304a;
+      --muted:#a3b1c6;
+      --text:#e5e7eb;
+      --link:#93c5fd;
+      --btn:#1f2937;
+      --btnHover:#111827;
+      --danger:#fca5a5;
+      --success:#86efac;
+      --warning:#fde68a;
+      --chip:#111827;
+      --chipBorder:#334155;
+    }
+    *{ box-sizing:border-box; }
+    body { font-family: system-ui, Arial; margin: 0; background:var(--bg); color:var(--text); }
+    header { padding: 14px 18px; background:var(--panel); border-bottom:1px solid var(--border); display:flex; gap:10px; align-items:center; position:sticky; top:0; z-index:10; }
+    header strong { letter-spacing:.2px; }
+    a { color:var(--link); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    main { padding: 20px; max-width: 1050px; margin: 0 auto; }
+    .card { background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:16px; margin: 14px 0; }
+    .btn { display:inline-flex; align-items:center; gap:8px; padding:10px 12px; background:var(--btn); border:1px solid var(--chipBorder); border-radius:12px; color:var(--text); cursor:pointer; }
+    .btn:hover { background:var(--btnHover); text-decoration:none; }
+    .btn.primary { background:#0b2a4a; border-color:#1d4ed8; }
+    .btn.primary:hover { background:#08213a; }
+    .error { color:var(--danger); }
+    .success { color:var(--success); }
+    .warning { color:var(--warning); }
+
+    label { display:block; margin-top:12px; font-weight:600; }
+    .help { color:var(--muted); font-size:12px; margin-top:6px; }
+    .field-error { color:var(--danger); font-size:12px; margin-top:6px; }
+
+    input, select, textarea {
+      width:100%;
+      padding:10px;
+      border-radius:12px;
+      border:1px solid var(--chipBorder);
+      background:var(--bg);
+      color:var(--text);
+      outline:none;
+    }
+    textarea { resize: vertical; }
+    input:focus, select:focus, textarea:focus { border-color:#60a5fa; }
+
+    .row { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+    @media (max-width: 720px){ .row { grid-template-columns: 1fr; } }
+
+    .topbar { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .spacer { flex:1; }
+    .chip {
+      display:inline-flex;
+      align-items:center;
+      padding:6px 10px;
+      border-radius:999px;
+      background:var(--chip);
+      border:1px solid var(--chipBorder);
+      color:var(--muted);
+      font-size:12px;
+      gap:8px;
+    }
+    .divider { border:0; border-top:1px solid var(--border); margin:16px 0; }
+
+    /* mensajes estilo "toast" */
+    .toast { display:flex; align-items:flex-start; gap:10px; padding:12px 14px; border-radius:12px; border:1px solid var(--border); background:#0b1324; }
+    .toast strong { display:block; }
+    .toast.success { border-color: rgba(134, 239, 172, .35); }
+    .toast.error { border-color: rgba(252, 165, 165, .35); }
+    .toast.warning { border-color: rgba(253, 230, 138, .35); }
+
+    .muted { color:var(--muted); }
+    .kpi { display:flex; gap:10px; flex-wrap:wrap; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar" style="width:100%;">
+      <strong>Library Front</strong>
+      <span class="chip">DRF + Django templates</span>
+      <span class="spacer"></span>
+      <a class="btn" href="{% url 'books_list' %}">📚 Libros</a>
+      <a class="btn" href="{% url 'author_create' %}">✍️ Crear Autor</a>
+      <a class="btn primary" href="{% url 'book_create' %}">➕ Crear Libro</a>
+    </div>
+  </header>
+
+  <main>
+    {% if messages %}
+      <div class="card">
+        {% for message in messages %}
+          <div class="toast {% if message.tags %}{{ message.tags }}{% else %}warning{% endif %}">
+            <div>
+              {% if message.tags == 'success' %}
+                <strong class="success">OK</strong>
+              {% elif message.tags == 'error' %}
+                <strong class="error">Error</strong>
+              {% else %}
+                <strong class="warning">Aviso</strong>
+              {% endif %}
+              <div>{{ message }}</div>
+            </div>
+          </div>
+          {% if not forloop.last %}<div style="height:10px;"></div>{% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

@@ -1,0 +1,74 @@
+{% extends "web/base.html" %}
+{% block title %}Crear Libro · Library{% endblock %}
+
+{% block content %}
+  <h1 style="margin:0 0 6px 0;">Crear Libro</h1>
+  <p class="muted" style="margin:0 0 14px 0;">
+    Este formulario crea un libro usando el endpoint DRF <span class="chip">POST /api/books/</span>
+  </p>
+
+  <div class="card">
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="toast error" style="margin-bottom:12px;">
+          <div>
+            <strong class="error">Error</strong>
+            {{ form.non_field_errors }}
+          </div>
+        </div>
+      {% endif %}
+
+      <label for="{{ form.title.id_for_label }}">{{ form.title.label }}</label>
+      {{ form.title }}
+      {% for err in form.title.errors %}<div class="field-error">{{ err }}</div>{% endfor %}
+
+      <div class="row">
+        <div>
+          <label for="{{ form.isbn.id_for_label }}">{{ form.isbn.label }}</label>
+          {{ form.isbn }}
+          <div class="help">13 caracteres (si tu API valida estrictamente).</div>
+          {% for err in form.isbn.errors %}<div class="field-error">{{ err }}</div>{% endfor %}
+        </div>
+        <div>
+          <label for="{{ form.published_date.id_for_label }}">{{ form.published_date.label }}</label>
+          {{ form.published_date }}
+          <div class="help">Opcional</div>
+          {% for err in form.published_date.errors %}<div class="field-error">{{ err }}</div>{% endfor %}
+        </div>
+      </div>
+
+      <label for="{{ form.author_id.id_for_label }}">{{ form.author_id.label }}</label>
+      {{ form.author_id }}
+      {% for err in form.author_id.errors %}<div class="field-error">{{ err }}</div>{% endfor %}
+      <div class="help">
+        Si no ves autores aquí, crea uno primero en <a href="{% url 'author_create' %}">Crear Autor</a>.
+      </div>
+
+      <hr class="divider" />
+
+      <h3 style="margin:0 0 10px 0;">Categorías (opcional)</h3>
+
+      <label for="{{ form.categories_input_text.id_for_label }}">{{ form.categories_input_text.label }}</label>
+      {{ form.categories_input_text }}
+      {% for err in form.categories_input_text.errors %}<div class="field-error">{{ err }}</div>{% endfor %}
+
+      <div class="help">
+        Formato: <span class="chip">Nombre:prioridad</span> separado por comas.
+        Ejemplo: <span class="chip">Novela:1, Realismo mágico:2, Historia</span>
+      </div>
+
+      <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn primary" type="submit">Crear</button>
+        <a class="btn" href="{% url 'books_list' %}">Volver</a>
+      </div>
+    </form>
+  </div>
+
+  <div class="card">
+    <strong class="muted">Tip:</strong>
+    Si quieres que esto sea 100% “UI”, puedo hacerte un botón “Agregar fila de categoría” con JS mínimo,
+    pero con este input ya soportas N categorías sin complicarte.
+  </div>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "web/base.html" %}
+{% block title %}Libros · Library{% endblock %}
+
+{% block content %}
+  <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+    <div>
+      <h1 style="margin:0 0 6px 0;">Libros</h1>
+      <p class="muted" style="margin:0;">Listado consumiendo <span class="chip">GET /api/books/</span></p>
+    </div>
+
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <a class="btn" href="{% url 'author_create' %}">✍️ Crear Autor</a>
+      <a class="btn primary" href="{% url 'book_create' %}">➕ Crear Libro</a>
+    </div>
+  </div>
+
+  {% if error %}
+    <div class="card">
+      <div class="toast error">
+        <div>
+          <strong class="error">Error</strong>
+          {{ error }}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if books %}
+    <div class="kpi" style="margin-top:14px;">
+      <span class="chip">Total: {{ books|length }}</span>
+    </div>
+
+    {% for b in books %}
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+          <div>
+            <h3 style="margin:0 0 6px 0;">{{ b.title }}</h3>
+            <div class="muted" style="font-size:13px;">
+              <span class="chip">ISBN {{ b.isbn }}</span>
+              {% if b.published_date %}<span class="chip">Publicado {{ b.published_date }}</span>{% endif %}
+            </div>
+          </div>
+
+          <div class="muted" style="text-align:right;">
+            {% if b.author %}
+              <div><strong>Autor:</strong> {{ b.author.name }}</div>
+            {% elif b.author_name %}
+              <div><strong>Autor:</strong> {{ b.author_name }}</div>
+            {% elif b.author_id %}
+              <div><strong>Autor ID:</strong> {{ b.author_id }}</div>
+            {% else %}
+              <div><strong>Autor:</strong> —</div>
+            {% endif %}
+          </div>
+        </div>
+
+        {% if b.categories %}
+          <hr class="divider" />
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            {% for c in b.categories %}
+              <span class="chip">
+                {% if c.name %}{{ c.name }}{% else %}{{ c }}{% endif %}
+                {% if c.priority %} · p{{ c.priority }}{% endif %}
+              </span>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="muted" style="margin-top:10px;">Sin categorías</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="card">No hay libros aún.</div>
+  {% endif %}
+{% endblock %}
