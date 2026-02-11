@@ -4,7 +4,7 @@ from django.contrib import messages
 
 from .forms import AuthorCreateForm, BookCreateForm
 
-API_BASE = "http://127.0.0.1:8000/api"
+API_BASE = "http://127.0.0.1:8000/api/v1/"
 
 
 def _extract_api_error(resp: requests.Response) -> str:

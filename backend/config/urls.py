@@ -18,8 +18,10 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path("authors/", include("authors.urls")),
+    path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls")),
-    path("docs/", include("docs.urls")), 
+    # Docs (schema + swagger + redoc)
+    path("docs/", include("docs.urls")),
+    # API versionada
+    path("api/v1/", include("api.urls")),
 ]
